@@ -8,7 +8,7 @@
     <link th:href="@{/css/techjobs.css}" rel="stylesheet" />
     <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
 
-    <title th:text="'TechJobs' + ${title == null ? '' : ' :: ' + title}">TechJobs</title>
+    <title th:text="'TechJobs' + ${title == null ? '' : ' - ' + title}">TechJobs</title>
 </head>
 
 <body>
@@ -25,6 +25,16 @@
                 </ul>
             </div>
         </div>
+    </div>
+
+    <div th:fragment="search-results">
+        <h3 th:text="${jobs.size() + ' Result(s)'}"></h3>
+        <table th:each="job : ${jobs}" class="job-listing">
+            <tr th:each="field : ${job}">
+                <td th:value="${field.key}" th:text="${#strings.capitalizeWords(field.key)}"></td>
+                <td th:value="${field.value}" th:text="${field.value}"></td>
+            </tr>
+        </table>
     </div>
 
 </body>
