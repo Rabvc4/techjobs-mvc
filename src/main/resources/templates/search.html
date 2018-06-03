@@ -20,7 +20,8 @@
                         name="searchType"
                         th:id="${column.key}"
                         th:value="${column.key}"
-                        th:checked="${column.key == 'all'}"/>
+                        th:checked="${lastCategory} ? ${column.value == lastCategory} : ${column.key} == 'all'" />
+
                 <label th:for="${column.key}" th:text="${column.value}"></label>
             </span>
 
@@ -28,7 +29,7 @@
 
         <p>
             <label for="searchTerm">Keyword:</label>
-            <input type="text" class="form-control mx-3" name="searchTerm" id="searchTerm" />
+            <input type="text" class="form-control" name="searchTerm" id="searchTerm" th:value="${lastSearch}" />
         </p>
 
         <input type="submit" class="btn btn-default" value="Search" />
@@ -36,7 +37,11 @@
 
     <hr />
 
-    <!-- TODO #2 - Loop over jobs map to display all job fields -->
+    <div th:if="${jobs}">
+
+        <div th:replace="fragments :: search-results"></div>
+
+    </div>
 
 </div>
 
