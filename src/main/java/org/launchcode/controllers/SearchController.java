@@ -16,12 +16,48 @@ import java.util.HashMap;
 @RequestMapping("search")
 public class SearchController {
 
+    static HashMap<String, String> columnChoices = ListController.columnChoices;
+
     @RequestMapping(value = "")
     public String search(Model model) {
-        model.addAttribute("columns", ListController.columnChoices);
+        model.addAttribute("columns", columnChoices);
         return "search";
     }
 
-    // TODO #1 - Create handler to process search request and display results
+
+    @RequestMapping(value = "results")
+    public String listColumnValues(Model model, @RequestParam String searchType, @RequestParam String searchTerm) {
+
+        System.out.println("-----------" + searchTerm);
+
+        if (searchType.equals("all")) {
+            ArrayList<HashMap<String, String>> jobs = JobData.findByValue(searchTerm);
+            model.addAttribute("title", "All Jobs");
+            model.addAttribute("columns", columnChoices);
+            model.addAttribute("lastSearch", searchTerm);
+            model.addAttribute("jobs", jobs);
+            return "search";
+        } else {
+            ArrayList<HashMap<String, String>> jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+            model.addAttribute("title", columnChoices.get(searchType) + "s");
+            model.addAttribute("columns", columnChoices);
+            model.addAttribute("lastSearch", searchTerm);
+            model.addAttribute("lastCategory", columnChoices.get(searchType));
+            model.addAttribute("jobs", jobs);
+            return "search";
+        }
+
+    }
+
+    @RequestMapping(value = "jobs")
+    public String listJobsByColumnAndValue(Model model,
+                                           @RequestParam String searchType, @RequestParam String searchTerm) {
+
+        ArrayList<HashMap<String, String>> jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+        model.addAttribute("title", "Jobs with " + columnChoices.get(searchType) + ": " + searchTerm);
+        model.addAttribute("jobs", jobs);
+
+        return "search";
+    }
 
 }
